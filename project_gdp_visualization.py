@@ -10,6 +10,16 @@ import pygal
 import pygal_maps_world #µ¼ÈëĞèÒªÊ¹ÓÃµÄ¿â
 
 def read_csv_as_nested_dict(filename, keyfield, separator, quote): #¶ÁÈ¡Ô­Ê¼csvÎÄ¼şµÄÊı¾İ£¬¸ñÊ½ÎªÇ¶Ì××Öµä`	
+	"""
+    ÊäÈë²ÎÊı:
+      filename:csvÎÄ¼şÃû
+      keyfield:¼üÃû
+      separator:·Ö¸ô·û
+      quote:ÒıÓÃ·û
+
+    Êä³ö:
+      ¶ÁÈ¡csvÎÄ¼şÊı¾İ£¬·µ»ØÇ¶Ì××Öµä¸ñÊ½£¬ÆäÖĞÍâ²ã×ÖµäµÄ¼ü¶ÔÓ¦²ÎÊıkeyfiled£¬ÄÚ²ã×Öµä¶ÔÓ¦Ã¿ĞĞÔÚ¸÷ÁĞËù¶ÔÓ¦µÄ¾ßÌåÖµ
+    """
 	result={}
 	with open(filename,'rt',newline="")as csvfile:
 		csvreader=csv.DictReader(csvfile,delimiter=separator,quotechar=quote)
@@ -17,7 +27,17 @@ def read_csv_as_nested_dict(filename, keyfield, separator, quote): #¶ÁÈ¡Ô­Ê¼csvÎ
 			rowid=row[keyfield]
 			result[rowid]=row
 	return result
-def reconcile_countries_by_name(plot_countries, gdp_countries):
+def reconcile_countries_by_name(plot_countries, gdp_countries):#·µ»ØÔÚÊÀĞĞÓĞGDPÊı¾İµÄ»æÍ¼¿â¹ú¼Ò´úÂë×Öµä£¬ÒÔ¼°Ã»ÓĞÊÀĞĞGDPÊı¾İµÄ¹ú¼Ò´úÂë¼¯ºÏ
+	"""
+    
+    ÊäÈë²ÎÊı:
+    plot_countries: »æÍ¼¿â¹ú¼Ò´úÂëÊı¾İ£¬×Öµä¸ñÊ½£¬ÆäÖĞ¼üÎª»æÍ¼¿â¹ú¼Ò´úÂë£¬ÖµÎª¶ÔÓ¦µÄ¾ßÌå¹úÃû
+    gdp_countries:ÊÀĞĞ¸÷¹úÊı¾İ£¬Ç¶Ì××Öµä¸ñÊ½£¬ÆäÖĞÍâ²¿×ÖµäµÄ¼üÎªÊÀĞĞ¹ú¼Ò´úÂë£¬ÖµÎª¸Ã¹úÔÚÊÀĞĞÎÄ¼şÖĞµÄĞĞÊı¾İ£¨×Öµä¸ñÊ½)
+    
+    Êä³ö£º
+    ·µ»ØÔª×é¸ñÊ½£¬°üÀ¨Ò»¸ö×ÖµäºÍÒ»¸ö¼¯ºÏ¡£ÆäÖĞ×ÖµäÄÚÈİÎªÔÚÊÀĞĞÓĞGDPÊı¾İµÄ»æÍ¼¿â¹ú¼ÒĞÅÏ¢£¨¼üÎª»æÍ¼¿â¸÷¹ú¼Ò´úÂë£¬ÖµÎª¶ÔÓ¦µÄ¾ßÌå¹úÃû),
+    ¼¯ºÏÄÚÈİÎªÔÚÊÀĞĞÎŞGDPÊı¾İµÄ»æÍ¼¿â¹ú¼Ò´úÂë
+    """
 	Hit={}
 	MIN=set()
 	Tup1=(Hit,MIN1)
@@ -32,6 +52,18 @@ def reconcile_countries_by_name(plot_countries, gdp_countries):
 			MIN1.add(sex2)				
 	return Tup1
 def build_map_dict_by_name(gdpinfo, plot_countries, year):
+	"""
+    ÊäÈë²ÎÊı:
+    gdpinfo: 
+	plot_countries: »æÍ¼¿â¹ú¼Ò´úÂëÊı¾İ£¬×Öµä¸ñÊ½£¬ÆäÖĞ¼üÎª»æÍ¼¿â¹ú¼Ò´úÂë£¬ÖµÎª¶ÔÓ¦µÄ¾ßÌå¹úÃû
+	year: ¾ßÌåÄê·İÖµ
+	
+    Êä³ö£º
+    Êä³ö°üº¬Ò»¸ö×ÖµäºÍ¶ş¸ö¼¯ºÏµÄÔª×éÊı¾İ¡£ÆäÖĞ×ÖµäÊı¾İÎª»æÍ¼¿â¸÷¹ú¼Ò´úÂë¼°¶ÔÓ¦µÄÔÚÄ³¾ßÌåÄê·İGDP²úÖµ£¨¼üÎª»æÍ¼¿âÖĞ¸÷¹ú¼Ò´úÂë£¬ÖµÎªÔÚ¾ßÌåÄê·İ£¨ÓÉyear²ÎÊıÈ·¶¨£©Ëù¶ÔÓ¦µÄÊÀĞĞGDPÊı¾İÖµ¡£Îª
+    ºóĞøÏÔÊ¾·½±ã£¬GDP½á¹ûĞè×ª»»ÎªÒÔ10Îª»ùÊıµÄ¶ÔÊı¸ñÊ½£¬ÈçGDPÔ­Ê¼ÖµÎª2500£¬ÔòÓ¦Îªlog2500£¬ps:ÀûÓÃmath.log()Íê³É)
+    2¸ö¼¯ºÏÒ»¸öÎªÔÚÊÀĞĞGDPÊı¾İÖĞÍêÈ«Ã»ÓĞ¼ÇÂ¼µÄ»æÍ¼¿â¹ú¼Ò´úÂë£¬ÁíÒ»¸ö¼¯ºÏÎªÖ»ÊÇÃ»ÓĞÄ³ÌØ¶¨Äê£¨ÓÉyear²ÎÊıÈ·¶¨£©ÊÀĞĞGDPÊı¾İµÄ»æÍ¼¿â¹ú¼Ò´úÂë
+
+   """
 	set1=set()
 	set2=set()
 	set3=set()
@@ -51,6 +83,19 @@ def build_map_dict_by_name(gdpinfo, plot_countries, year):
 	Tup2=(Hit,set1,set3)
 	return tuple2			
 def render_world_map(gdpinfo, plot_countries, year, map_file):
+	"""
+    Inputs:
+      
+      gdpinfo:gdpĞÅÏ¢×Öµä
+      plot_countires:»æÍ¼¿â¹ú¼Ò´úÂëÊı¾İ£¬×Öµä¸ñÊ½£¬ÆäÖĞ¼üÎª»æÍ¼¿â¹ú¼Ò´úÂë£¬ÖµÎª¶ÔÓ¦µÄ¾ßÌå¹úÃû
+      year:¾ßÌåÄê·İÊı¾İ£¬ÒÔ×Ö·û´®¸ñÊ½³ÌĞò£¬Èç"1970"
+      map_file:Êä³öµÄÍ¼Æ¬ÎÄ¼şÃû
+    
+    Ä¿±ê£º½«Ö¸¶¨Ä³ÄêµÄÊÀ½ç¸÷¹úGDPÊı¾İÔÚÊÀ½çµØÍ¼ÉÏÏÔÊ¾£¬²¢½«½á¹ûÊä³öÎª¾ßÌåµÄµÄÍ¼Æ¬ÎÄ¼ş
+    ÌáÊ¾£º±¾º¯Êı¿ÉÊÓ»¯ĞèÒªÀûÓÃpygal.maps.world.World()·½·¨
+     
+
+    """
 	worldmap_chart=pygal.maps.world.World()
 	worldmap_chart.title="{}ÄêÈ«ÇòGDP·Ö²¼Í¼".format(year)			
 	worldmap_chart.add(year,build_map_dict_by_name(gdpinfo, plot_countries, year)[0])
